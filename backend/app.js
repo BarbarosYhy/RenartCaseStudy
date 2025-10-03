@@ -14,22 +14,37 @@ app.get('/', async (req,res) => {
 
 app.get('/products', (req,res) => {
     res.json(products);
-})
-
-
+});
 
 app.get('/products/price', async (req, res) => {
-    const goldPrice = await getGoldStandardBidAskPrice();
+    const productPrices = await getProductRealTimePrices();
     
-    const productPrices = products.map(product => {
-        return (product.popularityScore + 1) * product.weight * goldPrice;
-    });
+    
     res.json(productPrices);
-})
+});
 
-async function getGoldStandardBidAskPrice() {
+app.get('/products/price/filter', async (req,res) => {
+    const productPrices = await getProductRealTimePrices();
+    const {min, max} = req.query;
+
+    const descendedProducts = productPrices.filter((price) => {
+        return price >= min && price <= max;
+    }).sort();
+
+    res.json(descendedProducts);
+});
+
+app.get('/products/filter', (req,res) => {
+    res.json(products);
+});
+
+async function getProductRealTimePrices() {
     const goldPriceUrl = "https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAU/USD";
     const response = await fetch(goldPriceUrl);
     const data = await response.json();
-    return data[0].spreadProfilePrices[0].bid;
+    const goldPrice = data[0].spreadProfilePrices[0].bid;
+    const productPrices = products.map(product => {
+        return ((product.popularityScore + 1) * product.weight * goldPrice).toFixed(2);
+    });
+    return productPrices;
 }
