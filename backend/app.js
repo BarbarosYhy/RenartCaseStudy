@@ -1,56 +1,77 @@
 const express = require('express');
-
+const cors = require('cors');
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173'   // Vite dev server
+}));
 
 app.listen(3000);
 
 
-const products = require('./products/products.json');
+const products = require('./products.json');
 
+const TROY_OUNCE_TO_GRAM = 31.1035;
 
-app.get('/', async (req,res) => {
-   console.log("Hi World");
-});
-
-app.get('/products', (req,res) => {
-    res.json(products);
-});
-
-app.get('/products/price', async (req, res) => {
-    const productPrices = await getProductRealTimePrices();
-    
-    
-    res.json(productPrices);
-});
-
-app.get('/products/price/filter', async (req,res) => {
-    const productPrices = await getProductRealTimePrices();
-    const {min, max} = req.query;
-
-    const descendedProducts = productPrices.filter((price) => {
-        return price >= min && price <= max;
-    }).sort();
-
-    res.json(descendedProducts);
-});
-
-app.get('/products/filter', (req,res) => {
-    const {popularityScore} = req.query;
-
-    const descendedProducts = productPrices.filter((price) => {
-        return price >= min && price <= max;
-    }).sort();
-
-    res.json(descendedProducts);
-});
-
-async function getProductRealTimePrices() {
+async function getGoldPrice() {
     const goldPriceUrl = "https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAU/USD";
     const response = await fetch(goldPriceUrl);
     const data = await response.json();
-    const goldPrice = data[0].spreadProfilePrices[0].bid;
-    const productPrices = products.map(product => {
-        return ((product.popularityScore + 1) * product.weight * goldPrice).toFixed(2);
-    });
-    return productPrices;
+    return data[0].spreadProfilePrices[0].bid/TROY_OUNCE_TO_GRAM;
+   
 }
+
+async function getProductsWithPrice(){
+    const goldPrice = await getGoldPrice();
+    return products.map(product => {
+        const productPrice = ((product.popularityScore + 1) * product.weight * goldPrice).toFixed(2);
+        return {...product, productPrice};
+    });
+
+}
+
+app.get('/', async (req,res) => {
+   res.redirect('/productList');
+});
+
+app.get('/productList', async (req,res) => {
+    try{
+        const products = await getProductsWithPrice();
+        res.json(products);
+    }
+    catch (err){
+        console.error(err);
+        res.status(500).json({error: "Failed to show products"});
+    }
+    
+});
+
+
+app.get('/productList/filter', async (req,res) => {
+    try{
+        const products = await getProductsWithPrice();
+        const {minPrice, maxPrice, minScore} = req.query;
+        
+        let result = products;
+        if(minPrice&&maxPrice){
+            result = result.filter((p) => { return p.productPrice >= Number(minPrice) && p.productPrice <= Number(maxPrice);});
+            result.sort((a, b) => b.productPrice - a.productPrice);
+        }
+        if(minScore){
+            result = result.filter((p) => { return p.popularityScore >= Number(minScore);});
+            result.sort((a, b) => b.popularityScore - a.popularityScore);
+        }
+
+
+        res.json(result);
+        
+    }
+    catch (err){
+        console.error(err);
+        res.status(500).json({error: "Failed to show products"});
+    }
+});
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
