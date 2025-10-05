@@ -1,4 +1,6 @@
-import products from '../../products.json' assert { type: 'json' };
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const products = require('../../products.json');
 
 const TROY_OUNCE_TO_GRAM = 31.1035;
 
