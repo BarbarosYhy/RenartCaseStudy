@@ -124,11 +124,11 @@ export default function App() {
           navigation
           scrollbar={{ draggable: true, hide: false, dragSize:250}}
           spaceBetween={140}
-          slidesPerView={4}
+          slidesPerView={1}
           slidesPerGroup={4}
           loop={false}
           breakpoints={{
-            0:    { slidesPerView: 1.2, slidesPerGroup: 1, spaceBetween: 16 },
+            0:    { slidesPerView: 1, slidesPerGroup: 1, spaceBetween: 16 },
             480:  { slidesPerView: 2,   slidesPerGroup: 2, spaceBetween: 20 },
             768:  { slidesPerView: 3,   slidesPerGroup: 3, spaceBetween: 24 },
             1024: { slidesPerView: 4,   slidesPerGroup: 4, spaceBetween: 28 },
