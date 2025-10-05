@@ -35,7 +35,13 @@ app.get('/products/price/filter', async (req,res) => {
 });
 
 app.get('/products/filter', (req,res) => {
-    res.json(products);
+    const {popularityScore} = req.query;
+
+    const descendedProducts = productPrices.filter((price) => {
+        return price >= min && price <= max;
+    }).sort();
+
+    res.json(descendedProducts);
 });
 
 async function getProductRealTimePrices() {
