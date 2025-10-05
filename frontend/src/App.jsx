@@ -133,7 +133,7 @@ export default function App() {
             480:  { slidesPerView: 2,   spaceBetween: 20 },
             768:  { slidesPerView: 3,   spaceBetween: 24 },
             1024: { slidesPerView: 4,   spaceBetween: 28 },
-            1440: { slidesPerView: 5,   spaceBetween: 32 },
+            1440: { slidesPerView: 4,   spaceBetween: 32 },
           }}
         >
           {products.map((p) => {
