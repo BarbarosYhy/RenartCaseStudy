@@ -126,6 +126,8 @@ export default function App() {
           spaceBetween={140}
           roundLengths={true} 
           slidesPerView={1}
+          slidesOffsetBefore={0}
+          slidesOffsetAfter={0}
           slidesPerGroup={1}
           loop={false}
           breakpoints={{
