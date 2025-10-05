@@ -186,11 +186,11 @@
 
 
 .swiper-button-prev {
-  left: 16px;             
+  left: -42px;             
 }
 
 .swiper-button-next {
-  right: 16px;         
+  right: -42px;         
 }
 
 
