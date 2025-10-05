@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/scrollbar";
 import "./App.css";
 
-function useProducts(api = "http://localhost:3000/productList") {
+function useProducts(api = "/api/productList") {
   const [products, setProducts] = useState([]);
   const [status, setStatus] = useState("loading");
 
@@ -104,7 +104,7 @@ function ProductCard({ product, color, onPickColor }) {
 
 
 export default function App() {
-  const { products, status } = useProducts("http://localhost:3000/productList");
+  const { products, status } = useProducts("/api/productList");
   const colors = useSelectedColors();
 
   if (status === "loading") return <p className="loading">Loading…</p>;
