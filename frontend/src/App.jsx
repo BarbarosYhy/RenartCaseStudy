@@ -125,14 +125,14 @@ export default function App() {
           scrollbar={{ draggable: true, hide: false, dragSize:250}}
           spaceBetween={140}
           slidesPerView={1}
-          slidesPerGroup={4}
+          slidesPerGroup={1}
           loop={false}
           breakpoints={{
-            0:    { slidesPerView: 1, slidesPerGroup: 1, spaceBetween: 16 },
-            480:  { slidesPerView: 2,   slidesPerGroup: 2, spaceBetween: 20 },
-            768:  { slidesPerView: 3,   slidesPerGroup: 3, spaceBetween: 24 },
-            1024: { slidesPerView: 4,   slidesPerGroup: 4, spaceBetween: 28 },
-            1440: { slidesPerView: 5,   slidesPerGroup: 5, spaceBetween: 32 },
+            0:    { slidesPerView: 1,  spaceBetween: 16 },
+            480:  { slidesPerView: 2,   spaceBetween: 20 },
+            768:  { slidesPerView: 3,   spaceBetween: 24 },
+            1024: { slidesPerView: 4,   spaceBetween: 28 },
+            1440: { slidesPerView: 5,   spaceBetween: 32 },
           }}
         >
           {products.map((p) => {
