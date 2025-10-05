@@ -29,6 +29,7 @@
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
+  padding: 0 16px;
 }
 
 .star-rating {
@@ -159,7 +160,7 @@
 .swiper {
   overflow: hidden;          
   padding: 0 56px;           
-  box-sizing: content-box;  
+  box-sizing: border-box;  
 }
 
 
