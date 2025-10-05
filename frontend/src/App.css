@@ -159,7 +159,7 @@
 
 .swiper {
   overflow: hidden;          
-  padding: 0 56px;           
+  padding: 0;           
   box-sizing: border-box;  
 }
 
