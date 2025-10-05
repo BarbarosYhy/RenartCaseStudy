@@ -5,23 +5,42 @@ const app = express();
 app.listen(3000);
 
 
-const products = require('./products/products.json');
+const products = require('./products.json');
 
+
+async function getGoldPrice() {
+    const goldPriceUrl = "https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAU/USD";
+    const response = await fetch(goldPriceUrl);
+    const data = await response.json();
+    return data[0].spreadProfilePrices[0].bid;
+   
+}
+
+async function getProductsWithPrice(){
+    const goldPrice = await getGoldPrice();
+    return products.map(product => {
+        const productPrice = ((product.popularityScore + 1) * product.weight * goldPrice).toFixed(2);
+        return {...product, productPrice};
+    });
+
+}
 
 app.get('/', async (req,res) => {
-   console.log("Hi World");
+   res.redirect('/productList');
 });
 
-app.get('/products', (req,res) => {
-    res.json(products);
+app.get('/productList', async (req,res) => {
+    try{
+        const products = await getProductsWithPrice();
+        res.json(products);
+    }
+    catch (err){
+        console.error(err);
+        res.status(500).json({error: "Failed to show products"});
+    }
+    
 });
 
-app.get('/products/price', async (req, res) => {
-    const productPrices = await getProductRealTimePrices();
-    
-    
-    res.json(productPrices);
-});
 
 app.get('/products/price/filter', async (req,res) => {
     const productPrices = await getProductRealTimePrices();
@@ -38,13 +57,3 @@ app.get('/products/filter', (req,res) => {
     res.json(products);
 });
 
-async function getProductRealTimePrices() {
-    const goldPriceUrl = "https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAU/USD";
-    const response = await fetch(goldPriceUrl);
-    const data = await response.json();
-    const goldPrice = data[0].spreadProfilePrices[0].bid;
-    const productPrices = products.map(product => {
-        return ((product.popularityScore + 1) * product.weight * goldPrice).toFixed(2);
-    });
-    return productPrices;
-}
