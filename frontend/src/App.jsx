@@ -124,6 +124,7 @@ export default function App() {
           navigation
           scrollbar={{ draggable: true, hide: false, dragSize:250}}
           spaceBetween={140}
+          roundLengths={true} 
           slidesPerView={1}
           slidesPerGroup={1}
           loop={false}
