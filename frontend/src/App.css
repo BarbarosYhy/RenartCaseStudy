@@ -6,6 +6,11 @@
   padding: 170px 20px;
 }
 
+/* put the inner gutters on a wrapper, not on .swiper */
+.carousel-shell {
+  position: relative;
+  padding: 0 56px;        /* space for arrows */
+}
 
 .hero {
   width: 100%;
@@ -159,7 +164,7 @@
 
 .swiper {
   overflow: hidden;          
-  padding: 0 56px;           
+  padding: 0;           
   box-sizing: border-box;  
 }
 
@@ -181,11 +186,11 @@
 
 
 .swiper-button-prev {
-  left: -28px;             
+  left: 16px;             
 }
 
 .swiper-button-next {
-  right: -28px;         
+  right: 16px;         
 }
 
 
